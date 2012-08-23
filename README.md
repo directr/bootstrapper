@@ -9,6 +9,7 @@ BootStrapper Help v1.1
 [-Get|-G]                The full address (http://) of the file to download or 
                          relative URI when downloading from Windows Azure Blob 
                          Storage
+                         
 [-storage|-sc]           Windows Azure Storage Connection String
 [-Put|-P]                Fully qualified target URL (http://) of the upload 
                          file location or relative URI when
