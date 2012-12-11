@@ -5,8 +5,9 @@ namespace Cumulux.BootStrapper
 {
     using System;
     using Microsoft.WindowsAzure;
-    using Microsoft.WindowsAzure.StorageClient;
+    using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.ServiceRuntime;
+    using Microsoft.WindowsAzure.Storage.Blob;
 
     public class BootStrapperManager
     {
@@ -65,11 +66,12 @@ namespace Cumulux.BootStrapper
                     //x| var account = CloudStorageAccount.Parse(args.StorageConnection);
                     //x| var client = account.CreateCloudBlobClient();
 
-                    var reference = Client.GetBlobReference(args.Get.StartsWith("/") ? args.Get.Substring(1) : args.Get);
+                    var reference = Client.GetBlobReferenceFromServer(new Uri(args.Get.StartsWith("/") ? args.Get.Substring(1) : args.Get));
+                    
                     var sas = reference.GetSharedAccessSignature(
-                        new SharedAccessPolicy()
+                        new SharedAccessBlobPolicy()
                         {
-                            Permissions = SharedAccessPermissions.Read,
+                            Permissions = SharedAccessBlobPermissions.Read,
                             SharedAccessExpiryTime = DateTime.Now.AddMinutes(10)
                         });
 
@@ -100,18 +102,18 @@ namespace Cumulux.BootStrapper
                 if ( Client != null )
                 {
                     try {
-                        CloudBlob blob = Client.GetBlobReference(args.Put.Trim('/'));
-                        blob.Container.CreateIfNotExist();
+                        var blob = Client.GetBlobReferenceFromServer(new Uri(args.Put.Trim('/')));
+                        blob.Container.CreateIfNotExists();
                         String target = blob.GetSharedAccessSignature(
-                            new SharedAccessPolicy() {
-                                Permissions = SharedAccessPermissions.Write,
+                            new SharedAccessBlobPolicy() {
+                                Permissions = SharedAccessBlobPermissions.Write,
                                 SharedAccessExpiryTime = DateTime.Now.AddMinutes(30)
                             });
                         if (args.Overwrite)
                             blob.DeleteIfExists();
                         targetUri = new Uri(blob.Uri, target);
                     }
-                    catch ( StorageClientException ex ) {
+                    catch ( StorageException ex ) {
                         if (Uri.IsWellFormedUriString(args.Put, UriKind.Relative))
                             throw new ArgumentException(
                                 "A valid connection string to Azure blob storage must be supplied when uploading to a relative URL.\n" + ex.Message,
