@@ -37,7 +37,7 @@ namespace Cumulux.BootStrapper
         /// </summary>
         /// <param name="args">The validated args parsed from the commmand line.</param>
         public void Start(BootStrapperArgs args)
-        {
+        {            
             if (RoleEnvironment.IsEmulated && !args.RunInEmulator)
             {
                 // Skip running if under emulator
@@ -66,7 +66,10 @@ namespace Cumulux.BootStrapper
                     //x| var account = CloudStorageAccount.Parse(args.StorageConnection);
                     //x| var client = account.CreateCloudBlobClient();
 
-                    var reference = Client.GetBlobReferenceFromServer(new Uri(args.Get.StartsWith("/") ? args.Get.Substring(1) : args.Get));
+                    //TODO BASEURI THING
+                    // MAKE
+                    few ggwegew
+                    var reference = Client.GetBlobReferenceFromServer(new Uri(Client.BaseUri.ToString() + (args.Get.StartsWith("/") ? args.Get.Substring(1) : args.Get)));
                     
                     var sas = reference.GetSharedAccessSignature(
                         new SharedAccessBlobPolicy()
@@ -74,7 +77,7 @@ namespace Cumulux.BootStrapper
                             Permissions = SharedAccessBlobPermissions.Read,
                             SharedAccessExpiryTime = DateTime.Now.AddMinutes(10)
                         });
-
+                    
                     urlToDownload = new Uri(reference.Uri, sas);
                 }
                 else //otherwise, this is a standard get
