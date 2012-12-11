@@ -68,8 +68,9 @@ namespace Cumulux.BootStrapper
 
                     //TODO BASEURI THING
                     // MAKE
-                    few ggwegew
-                    var reference = Client.GetBlobReferenceFromServer(new Uri(Client.BaseUri.ToString() + (args.Get.StartsWith("/") ? args.Get.Substring(1) : args.Get)));
+
+                    var uri = new Uri(Client.BaseUri, args.Get);
+                    var reference = Client.GetBlobReferenceFromServer(uri);
                     
                     var sas = reference.GetSharedAccessSignature(
                         new SharedAccessBlobPolicy()
@@ -105,7 +106,8 @@ namespace Cumulux.BootStrapper
                 if ( Client != null )
                 {
                     try {
-                        var blob = Client.GetBlobReferenceFromServer(new Uri(args.Put.Trim('/')));
+                        var uri = new Uri(Client.BaseUri, args.Put);
+                        var blob = Client.GetBlobReferenceFromServer(uri);
                         blob.Container.CreateIfNotExists();
                         String target = blob.GetSharedAccessSignature(
                             new SharedAccessBlobPolicy() {
@@ -135,7 +137,7 @@ namespace Cumulux.BootStrapper
                     package = Path.Combine(args.LocalResource, Path.GetFileName(targetUri.LocalPath));
                     this.zipper.Zip(args.LocalResource, package, args.Overwrite);
                 }
-                
+                 
                 //i| Always download as a get
                 package = this.uploader.UploadPackageToStorage(
                     package ?? args.LocalResource, 
