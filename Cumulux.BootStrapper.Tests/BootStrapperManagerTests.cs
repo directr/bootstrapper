@@ -36,7 +36,7 @@
             downloader.VerifyAll();
         }
 
-        [TestMethod]
+        [TestMethod]        
         public void TestAzureGetWithSlash()
         {
             var downloader = new Mock<IPackageDownloader>();
@@ -48,11 +48,12 @@
             var unzipper = new Mock<IPackageUnzipper>();
             var logger = new Mock<ILogger>();
 
+            //Test must be updated to start the Development storage or to replace with a real key or do more mocks work
             var args = new BootStrapperArgs()
             {
                 Get = "/container/large.rar",
                 LocalResource = @"C:\Temp",
-                StorageConnection = @"DefaultEndpointsProtocol=https;AccountName=test;AccountKey=SomeKey"
+                StorageConnection = @"UseDevelopmentStorage=true"
             };
 
             var manager = new BootStrapperManager(logger.Object, downloader.Object, runner.Object, unzipper.Object);
@@ -60,8 +61,8 @@
 
             downloader.VerifyAll();
         }
-
-        [TestMethod]
+       
+        [TestMethod]        
         public void TestAzureGetWithoutSlash()
         {
             var downloader = new Mock<IPackageDownloader>();
@@ -73,11 +74,12 @@
             var unzipper = new Mock<IPackageUnzipper>();
             var logger = new Mock<ILogger>();
 
+            //Test must be updated to start the Development storage or to replace with a real key or do more mocks work
             var args = new BootStrapperArgs()
             {
                 Get = "container/large.rar",
                 LocalResource = @"C:\Temp",
-                StorageConnection = @"DefaultEndpointsProtocol=https;AccountName=test;AccountKey=SomeKey"
+                StorageConnection = @"UseDevelopmentStorage=true"
             };
 
             var manager = new BootStrapperManager(logger.Object, downloader.Object, runner.Object, unzipper.Object);

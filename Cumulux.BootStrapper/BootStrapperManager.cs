@@ -38,7 +38,7 @@ namespace Cumulux.BootStrapper
         /// <param name="args">The validated args parsed from the commmand line.</param>
         public void Start(BootStrapperArgs args)
         {            
-            if (RoleEnvironment.IsEmulated && !args.RunInEmulator)
+            if (RoleEnvironment.IsAvailable && RoleEnvironment.IsEmulated && !args.RunInEmulator)
             {
                 // Skip running if under emulator
                 return;
